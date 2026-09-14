@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:background="@drawable/border_black"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- 단어 영역 (터치 영역 확보를 위해 padding 및 minWidth/Height 추가) -->
+        <TextView
+            android:id="@+id/tvStudyWord"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:minWidth="150dp"
+            android:gravity="center"
+            android:padding="12dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:textColor="#000000"
+            android:textSize="28sp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="100dp"
+            android:layout_height="1dp"
+            android:layout_marginVertical="16dp"
+            android:background="#000000" />
+
+        <!-- 뜻 영역 -->
+        <TextView
+            android:id="@+id/tvStudyMean"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:minWidth="150dp"
+            android:gravity="center"
+            android:padding="12dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:textColor="#000000"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+</LinearLayout>

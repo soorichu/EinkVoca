@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">EinkVoca</string>
+    <string name="csv_sync">CSV에서 가져오기</string>
+    <string name="open_voca">단어장 보기</string>
+    <string name="study_mode">단어 학습하기</string>
+    <string name="check_box">암기</string>
+    <string name="tts">암기</string>
+    <string name="select_storage">저장소 선택  </string>
+    <string name="internal_storage">내부 저장소</string>
+    <string name="external_storage">외부 저장소</string>
+    <string name="req_csv_upload_title">[CSV 올리는 방법]</string>
+    <string name="req_csv_upload_method"> einknote 폴더에 voca.csv를 UTF-8로 저장하여 넣어주세요.\n\n헤더는 word(단어), mean(의미), pron(발음), exam(예문)로 넣어주시면 됩니다.</string>
+</resources>
