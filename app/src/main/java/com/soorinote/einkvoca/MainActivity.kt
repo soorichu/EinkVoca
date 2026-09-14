@@ -9,6 +9,7 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import java.io.File
 import java.io.InputStreamReader
@@ -53,7 +54,8 @@ class MainActivity : AppCompatActivity() {
         createSampleCsvIfNeeded()
 
         btnSync.setOnClickListener {
-            syncCsvToDb()
+            // syncCsvToDb()
+            showCsvChooserDialog()
         }
 
         btnOpenVoca.setOnClickListener {
@@ -64,32 +66,10 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, StudyModeActivity::class.java))
         }
 
-        rbInxternal.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                // 내부 저장소로 변경
-                currentTargetDir = getExternalFilesDir(null) // 또는 File(Environment.getExternalStorageDirectory(), "einknote")
-            } else {
-                // 내부 저장소로 변경 (예: getFilesDir())
-                currentTargetDir = filesDir
-            }
-        }
+        rbInternal.setOnCheckedChangeListener { _, isChecked -> updateFileDirectory() }
 
-        rbExternal.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                // 1. 공용 외부 저장소 루트의 특정 폴더 설정
-                val targetDir = File(Environment.getExternalStorageDirectory(), "einknote")
+        rbExternal.setOnCheckedChangeListener { _, isChecked -> updateFileDirectory() }
 
-                // 폴더가 없으면 생성
-                if (!targetDir.exists()) {
-                    targetDir.mkdirs()
-                }
-
-                // 2. 절대 경로 문자열 추출 (/storage/emulated/0/einknote)
-                val pathText: String = targetDir.absolutePath
-
-                tvGuidePath.text = "* 외부 저장소 경로 : ${pathText}/einknote/ \n 위 경로에 'voca.csv'를 UTF-8로 저장하여 넣어주세요.\n헤더: word(단어), mean(의미), pron(발음), exam(예문)"
-            }
-        }
     }
 
     /**
@@ -158,34 +138,120 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
+     * CSV 파일 목록을 검색하고 선택 다이얼로그를 띄우는 함수
+     */
+    private fun showCsvChooserDialog() {
+        val directory = getPathDirectory()
+
+        // 폴더 존재 여부 및 디렉터리 확인
+        if (!directory.exists() || !directory.isDirectory) {
+            Toast.makeText(this, "einkvoca 폴더를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // .csv 확장자 파일 필터링
+        val csvFiles = directory.listFiles { file ->
+            file.isFile && file.extension.equals("csv", ignoreCase = true)
+        }
+
+        if (csvFiles.isNullOrEmpty()) {
+            Toast.makeText(this, "einkvoca 폴더에 CSV 파일이 없습니다.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // 파일 이름 목록 추출
+        val fileNames = csvFiles.map { it.name }.toTypedArray()
+
+        // 파일 선택 다이얼로그 생성
+        AlertDialog.Builder(this)
+            .setTitle("동기화할 CSV 파일 선택")
+            .setItems(fileNames) { _, which ->
+                val selectedFile = csvFiles[which]
+                importCsvData(selectedFile)
+            }
+            .setNegativeButton("취소", null)
+            .show()
+    }
+
+    /**
      * <저장소>/einknote/voca.csv 데이터를 읽어 DB에 동기화
      */
-    private fun syncCsvToDb() {
-        val csvFile = File(Environment.getExternalStorageDirectory(), "einknote/voca.csv")
+    private fun importCsvData(csvFile:File) {
+        // val csvFile = File(Environment.getExternalStorageDirectory(), "einknote/voca.csv")
         if (!csvFile.exists()) {
             Toast.makeText(this, "voca.csv 파일이 없습니다.", Toast.LENGTH_SHORT).show()
             return
         }
 
         try {
+
             val reader = InputStreamReader(csvFile.inputStream(), "UTF-8").buffered()
-            var line: String? = reader.readLine() // Header(word,mean,pron,exam) 스킵
+            val headerLine = reader.readLine() ?: return // 파일이 비어있으면 종료
+
+            // 헤더 파싱: 공백 제거 및 소문자 변환 후 각 컬럼명의 인덱스 매핑
+            val headerTokens = headerLine.split(",").map { it.trim().lowercase() }
+            val wordIdx = headerTokens.indexOf("word")
+            val meanIdx = headerTokens.indexOf("mean")
+            val pronIdx = headerTokens.indexOf("pron")
+            val examIdx = headerTokens.indexOf("exam")
+            val checkIdx = headerTokens.indexOfFirst { it == "checked" || it == "ischecked" }
+
+            var line: String? = null
             var count = 0
 
-            while (reader.readLine().also { line = it } != null) {
-                val tokens = line!!.split(",")
-                if (tokens.size >= 4) {
-                    val word = tokens[0].trim()
-                    val mean = tokens[1].trim()
-                    val pron = tokens[2].trim()
-                    val exam = tokens[3].trim()
-                    // 4개의 헤더 기준 동기화 시 기본 check 상태는 false로 설정
-                    val isChecked = if (tokens.size >= 5) tokens[4].trim().lowercase() == "true" else false
+            // 필수 컬럼(word, mean)이 헤더에 없으면 순서대로 읽기
+            if (wordIdx == -1 || meanIdx == -1) {
+                while (reader.readLine().also { line = it } != null) {
+                    val tokens = line!!.split(",")
+                    if (tokens.size >= 4) {
+                        val word = tokens[0].trim()
+                        val mean = tokens[1].trim()
+                        val pron = tokens[2].trim()
+                        val exam = tokens[3].trim()
+                        // 4개의 헤더 기준 동기화 시 기본 check 상태는 false로 설정
+                        val isChecked = if (tokens.size >= 5) tokens[4].trim().lowercase() == "true" else false
 
-                    dbHelper.insertOrUpdateWord(word, mean, pron, exam, isChecked)
-                    count++
+                        // 최소한의 필수 데이터가 있을 때만 DB 저장
+                        if (word.isNotEmpty() && mean.isNotEmpty()) {
+                            dbHelper.insertOrUpdateWord(word, mean, pron, exam, isChecked)
+                            count++
+                        }
+                    }
+
                 }
+
+            } else{
+
+                while (reader.readLine().also { line = it } != null) {
+                    val tokens = line!!.split(",")
+
+                    // 안전하게 인덱스 값을 가져오는 헬퍼 함수
+                    fun getToken(index: Int): String =
+                        if (index in tokens.indices) tokens[index].trim() else ""
+
+                    val word = getToken(wordIdx)
+                    val mean = getToken(meanIdx)
+                    val pron = getToken(pronIdx)
+                    val exam = getToken(examIdx)
+
+                    // checked 열이 존재하고 값이 'true'인지 판별 (없으면 기본값 false)
+                    val isChecked = if (checkIdx != -1 && checkIdx in tokens.indices) {
+                        tokens[checkIdx].trim().equals("true", ignoreCase = true)
+                    } else {
+                        false
+                    }
+
+                    // 최소한의 필수 데이터가 있을 때만 DB 저장
+                    if (word.isNotEmpty() && mean.isNotEmpty()) {
+                        dbHelper.insertOrUpdateWord(word, mean, pron, exam, isChecked)
+                        count++
+                    }
+                }
+
             }
+
+
+
             reader.close()
             Toast.makeText(this, "$count 개 단어 동기화 완료!", Toast.LENGTH_SHORT).show()
         } catch (e: Exception) {
