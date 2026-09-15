@@ -30,10 +30,10 @@ class StudyModeActivity : AppCompatActivity() {
                 // tvStudyMean.visibility = View.VISIBLE
 
                 currentIndex++
-                handler.postDelayed(this, 1000) // 1초 간격 갱신
+                handler.postDelayed(this, 2000) // 1초 간격 갱신
             } else if (uncheckedWords.isNotEmpty()) {
                 currentIndex = 0 // 순환 반복
-                handler.postDelayed(this, 1000)
+                handler.postDelayed(this, 2000)
             }
         }
     }

@@ -12,9 +12,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import java.io.File
-import java.io.InputStreamReader
-import com.soorinote.einkvoca.DatabaseHelper;
 import java.io.FileOutputStream
+import java.io.InputStreamReader
+import java.security.KeyStore
 
 class MainActivity : AppCompatActivity() {
 
@@ -76,23 +76,37 @@ class MainActivity : AppCompatActivity() {
      * 현재 선택된 저장소 Base Directory 반환
      */
     private fun getPathDirectory(): File {
-        // 저장할 폴더명
         val subFolderName = "einknote"
-        // RadioButton 체크 여부에 따라 경로 분기
-        val targetDir: File = if (rbExternal.isChecked) {
-            // [외부 저장소] 공용 외부 저장소 루트 (/storage/emulated/0/einknote)
-            File(Environment.getExternalStorageDirectory(), subFolderName)
+
+        // Context의 getExternalFilesDirs 호출 (Activity 내부 기준)
+        val externalDirs: Array<File?> = getExternalFilesDirs(null)
+
+        // externalDirs[1] 존재 및 null 여부 확인
+        val hasSdCard = externalDirs.size > 1 && externalDirs[1] != null
+
+        // if-else 표현식으로 val(불변) 변수에 바로 할당
+        val baseDir: File = if (rbExternal.isChecked) {
+            if (hasSdCard) {
+                externalDirs[1]!!
+            } else {
+                // 외부 저장소가 없는 경우 라디오 버튼 롤백 및 토스트 안내
+                rbInternal.isChecked = true
+                rbExternal.isChecked = false
+                Toast.makeText(this, "외부 저장소를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show()
+                externalDirs[0] ?: filesDir // 0번마저 null일 경우 앱 내부 filesDir로 폴백
+            }
         } else {
-            // [내부 저장소] 앱 전용 내부 저장소 루트 (/data/user/0/패키지명/files/einknote)
-            File(filesDir, subFolderName)
+            externalDirs[0] ?: filesDir
         }
+
+        val targetDir = File(baseDir, subFolderName)
 
         // 폴더가 없으면 생성
         if (!targetDir.exists()) {
             targetDir.mkdirs()
         }
 
-        return targetDir;
+        return targetDir
     }
 
     private fun updateFileDirectory() {
@@ -100,8 +114,6 @@ class MainActivity : AppCompatActivity() {
         val dir: String = getPathDirectory().absolutePath
         tvGuidePath.setText("* 경로 : ${dir}\n\n위 경로에 'voca.csv'를 UTF-8로 저장하여 넣어주세요.\n헤더: word(단어), mean(의미), pron(발음), exam(예문)")
     }
-
-
 
     private fun checkPermissions() {
         if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
