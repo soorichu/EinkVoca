@@ -16,36 +16,47 @@
         android:gravity="center"
         android:paddingBottom="24dp" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnOpenVoca"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginBottom="12dp"
         android:background="@drawable/border_black"
         android:text="@string/open_voca"
-        android:textColor="#000000"
+        android:textColor="@color/black"
         android:textSize="16sp"
         android:textStyle="bold" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnStudyMode"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginBottom="12dp"
         android:background="@drawable/border_black"
         android:text="@string/study_mode"
-        android:textColor="#000000"
+        android:textColor="@color/black"
         android:textSize="16sp"
         android:textStyle="bold" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnDeleteChecked"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/border_black"
+        android:text="@string/delete_checked_words"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnSync"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginBottom="12dp"
         android:background="@drawable/border_black"
         android:text="@string/csv_sync"
-        android:textColor="#000000"
+        android:textColor="@color/black"
         android:textSize="16sp"
         android:textStyle="bold" />
 
@@ -63,7 +74,7 @@
             android:layout_height="wrap_content"
             android:text="@string/select_storage"
             android:textColor="#000000"
-            android:textSize="13sp"
+            android:textSize="15sp"
             android:textStyle="bold" />
 
         <RadioGroup
@@ -80,7 +91,7 @@
                 android:checked="true"
                 android:text="@string/internal_storage"
                 android:textColor="#000000"
-                android:textSize="12sp" />
+                android:textSize="15sp" />
 
             <RadioButton
                 android:id="@+id/rbExternal"
@@ -89,7 +100,7 @@
                 android:layout_weight="1"
                 android:text="@string/external_storage"
                 android:textColor="#000000"
-                android:textSize="12sp" />
+                android:textSize="15sp" />
         </RadioGroup>
     </LinearLayout>
 
@@ -98,7 +109,7 @@
         android:layout_height="wrap_content"
         android:text="@string/req_csv_upload_title"
         android:textColor="#000000"
-        android:textSize="14sp"
+        android:textSize="17sp"
         android:textStyle="bold" />
 
     <TextView
@@ -106,9 +117,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
+        android:text="@string/guide_path"
+        android:textColor="#000000"
+        android:textSize="15sp"
+        android:lineSpacingExtra="3dp" />
+
+    <TextView
+        android:id="@+id/tvGuideCSV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
         android:text="@string/req_csv_upload_method"
         android:textColor="#000000"
-        android:textSize="12sp"
+        android:textSize="15sp"
         android:lineSpacingExtra="3dp" />
 
 </LinearLayout>

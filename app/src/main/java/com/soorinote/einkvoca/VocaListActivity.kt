@@ -2,69 +2,63 @@
 package com.soorinote.einkvoca
 
 import android.os.Bundle
-import android.speech.tts.TextToSpeech
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.CheckBox
-import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.util.Locale
 
-class VocaListActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
+class VocaListActivity : AppCompatActivity() {
 
     private lateinit var dbHelper: DatabaseHelper
-    private lateinit var tts: TextToSpeech
     private lateinit var adapter: VocaAdapter
+    private val items = mutableListOf<WordItem>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_voca_list)
 
+        val btnHome = findViewById<Button>(R.id.btnHome)
+        btnHome.setOnClickListener {
+            finish()
+        }
+
+        // 화면 전환 애니메이션 끄기 (E-Ink 깜빡임 방지)
+        window.setWindowAnimations(0)
+
         dbHelper = DatabaseHelper(this)
-        tts = TextToSpeech(this, this)
 
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        // 1. 깜빡임을 유발하는 기본 아이템 애니메이터(Fade/Add/Remove 효과) 제거
+
+        // E-Ink 화면 깜빡임 방지: 기본 애니메이터 제거
         recyclerView.itemAnimator = null
 
-        // 2. 모든 아이템 항목의 높이가 일정하다면 성능 향상 및 리프레시 감소
-        recyclerView.setHasFixedSize(true)
+        // 1. DB에서 단어 목록 로드
+        items.addAll(dbHelper.getAllWords())
 
-        adapter = VocaAdapter(dbHelper.getAllWords().toMutableList(), dbHelper) { item ->
-            speakWord(item)
-        }
+        // 2. 어댑터 초기화 및 리사이클러뷰 연결
+        adapter = VocaAdapter(items, dbHelper)
         recyclerView.adapter = adapter
     }
 
-    private fun speakWord(item: WordItem) {
-        val textToSpeak = "${item.word}. 뜻. ${item.mean}. 예문. ${item.exam}"
-        tts.speak(textToSpeak, TextToSpeech.QUEUE_FLUSH, null, null)
-    }
-
-    override fun onInit(status: Int) {
-        if (status == TextToSpeech.SUCCESS) {
-            tts.language = Locale.KOREAN
-        }
-    }
-
-    override fun onDestroy() {
-        if (::tts.isInitialized) {
-            tts.stop()
-            tts.shutdown()
-        }
-        super.onDestroy()
+    override fun onResume() {
+        super.onResume()
+        // 다른 화면에서 단어가 추가되거나 삭제되었을 때 목록 동기화
+        items.clear()
+        items.addAll(dbHelper.getAllWords())
+        adapter.notifyDataSetChanged()
     }
 }
 
 class VocaAdapter(
     private val items: MutableList<WordItem>,
     private val dbHelper: DatabaseHelper,
-    private val onTtsClick: (WordItem) -> Unit
 ) : RecyclerView.Adapter<VocaAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -73,7 +67,6 @@ class VocaAdapter(
         val tvMean: TextView = view.findViewById(R.id.tvMean)
         val tvExam: TextView = view.findViewById(R.id.tvExam)
         val cbCheck: CheckBox = view.findViewById(R.id.cbCheck)
-        val btnSpeak: ImageButton = view.findViewById(R.id.btnSpeak)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -84,20 +77,19 @@ class VocaAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = items[position]
         holder.tvWord.text = item.word
-        holder.tvPron.text = "[${item.pron}]"
+
+        // 발음기호가 비어있을 경우 대괄호 []만 나오는 현상 방지
+        holder.tvPron.text = if (item.pron.isNotBlank()) "[${item.pron}]" else ""
         holder.tvMean.text = item.mean
         holder.tvExam.text = item.exam
 
+        // 재사용 시 리스너 중복 호출 방지
         holder.cbCheck.setOnCheckedChangeListener(null)
         holder.cbCheck.isChecked = item.isChecked
 
         holder.cbCheck.setOnCheckedChangeListener { _, isChecked ->
             item.isChecked = isChecked
             dbHelper.updateCheckStatus(item.word, isChecked)
-        }
-
-        holder.btnSpeak.setOnClickListener {
-            onTtsClick(item)
         }
     }
 

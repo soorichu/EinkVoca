@@ -33,6 +33,15 @@ class MainActivity : AppCompatActivity() {
         window.setWindowAnimations(0)
         // DB 생성
         dbHelper = DatabaseHelper(this)
+        // DB 파일 및 onCreate() 강제 실행
+        dbHelper.writableDatabase
+
+        // DB 초기 단어 삽입
+        // dbHelper.insertInitialWords()
+        // 초기 단어가 잘 들어갔는지 바로 확인
+        // val wordCount = dbHelper.getAllWords().size
+        // android.util.Log.d("DB_TEST", "현재 DB 단어 수: $wordCount")
+
         // 저장소 선택
         rgStorage = findViewById(R.id.rgStorage)
         rbInternal = findViewById(R.id.rbInternal)
@@ -42,8 +51,7 @@ class MainActivity : AppCompatActivity() {
         val btnSync = findViewById<Button>(R.id.btnSync)
         val btnOpenVoca = findViewById<Button>(R.id.btnOpenVoca)
         val btnStudyMode = findViewById<Button>(R.id.btnStudyMode)
-
-
+        val btnDeleteChecked = findViewById<Button>(R.id.btnDeleteChecked)
 
         // 권한 확인 및 요청
         checkPermissions()
@@ -51,7 +59,7 @@ class MainActivity : AppCompatActivity() {
         // 초기 경로 설정
         updateFileDirectory()
         // 샘플 CSV 파일 생성
-        createSampleCsvIfNeeded()
+      //  createSampleCsvIfNeeded()
 
         btnSync.setOnClickListener {
             // syncCsvToDb()
@@ -66,8 +74,11 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, StudyModeActivity::class.java))
         }
 
-        rbInternal.setOnCheckedChangeListener { _, isChecked -> updateFileDirectory() }
+        btnDeleteChecked.setOnClickListener {
+            showDeleteConfirmDialog()
+        }
 
+        rbInternal.setOnCheckedChangeListener { _, isChecked -> updateFileDirectory() }
         rbExternal.setOnCheckedChangeListener { _, isChecked -> updateFileDirectory() }
 
     }
@@ -76,36 +87,49 @@ class MainActivity : AppCompatActivity() {
      * 현재 선택된 저장소 Base Directory 반환
      */
     private fun getPathDirectory(): File {
-        val subFolderName = "einknote"
+        val subFolderName = "einkvoca"
 
-        // Context의 getExternalFilesDirs 호출 (Activity 내부 기준)
+        // 앱 전용 외부 저장소 목록 조회
         val externalDirs: Array<File?> = getExternalFilesDirs(null)
-
-        // externalDirs[1] 존재 및 null 여부 확인
         val hasSdCard = externalDirs.size > 1 && externalDirs[1] != null
 
-        // if-else 표현식으로 val(불변) 변수에 바로 할당
-        val baseDir: File = if (rbExternal.isChecked) {
-            if (hasSdCard) {
-                externalDirs[1]!!
+        // 1. 내부 저장소 최상위 루트: /storage/emulated/0
+        val internalRootDir: File = Environment.getExternalStorageDirectory()
+
+        // 2. SD 카드 최상위 루트 추출: /storage/XXXX-XXXX
+        val sdCardRootDir: File? = if (hasSdCard) {
+            val path = externalDirs[1]!!.absolutePath
+            val androidIndex = path.indexOf("/Android")
+            if (androidIndex != -1) {
+                File(path.substring(0, androidIndex))
             } else {
-                // 외부 저장소가 없는 경우 라디오 버튼 롤백 및 토스트 안내
+                null
+            }
+        } else {
+            null
+        }
+
+        // RadioButton 선택에 따른 기본 루트 디렉터리 결정
+        val baseRootDir: File = if (rbExternal.isChecked) {
+            if (sdCardRootDir != null) {
+                sdCardRootDir
+            } else {
                 rbInternal.isChecked = true
                 rbExternal.isChecked = false
                 Toast.makeText(this, "외부 저장소를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show()
-                externalDirs[0] ?: filesDir // 0번마저 null일 경우 앱 내부 filesDir로 폴백
+                internalRootDir
             }
         } else {
-            externalDirs[0] ?: filesDir
+            internalRootDir
         }
 
-        val targetDir = File(baseDir, subFolderName)
+        // 최종 경로: [루트]/einkvoca
+        val targetDir = File(baseRootDir, subFolderName)
 
-        // 폴더가 없으면 생성
+        // 폴더가 없으면 생성 시도
         if (!targetDir.exists()) {
             targetDir.mkdirs()
         }
-
         return targetDir
     }
 
@@ -131,7 +155,7 @@ class MainActivity : AppCompatActivity() {
                 dir.mkdirs()
             }
 
-            val sampleFile = File(dir, "voca.csv")
+            val sampleFile = File(dir, "sample.csv")
             if (!sampleFile.exists()) {
                 val sampleContent = """
                     word,mean,pron,exam
@@ -141,6 +165,8 @@ class MainActivity : AppCompatActivity() {
                 """.trimIndent()
 
                 FileOutputStream(sampleFile).use { fos ->
+                    // BOM 추가 및 UTF-8 인코딩 설정
+                    fos.write(byteArrayOf(0xEF.toByte(), 0xBB.toByte(), 0xBF.toByte()))
                     fos.write(sampleContent.toByteArray(Charsets.UTF_8))
                 }
             }
@@ -271,4 +297,22 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "동기화 오류: ${e.message}", Toast.LENGTH_SHORT).show()
         }
     }
+
+    private fun showDeleteConfirmDialog() {
+        AlertDialog.Builder(this)
+            .setTitle("암기한 단어 삭제")
+            .setMessage("체크된 암기 완료 단어들을 모두 삭제하시겠습니까?")
+            .setPositiveButton("삭제") { _, _ ->
+                val deletedCount = dbHelper.deleteCheckedWords()
+
+                if (deletedCount > 0) {
+                    Toast.makeText(this, "${deletedCount}개의 단어가 삭제되었습니다.", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, "삭제할 암기 완료 단어가 없습니다.", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .setNegativeButton("취소", null)
+            .show()
+    }
+
 }

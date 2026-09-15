@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="8dp"
-    android:background="@drawable/border_black"
+    android:background="@drawable/border_bottom"
     android:orientation="vertical"
     android:padding="12dp">
 
@@ -24,12 +24,12 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/tvPron"
+            android:id="@+id/tvMean"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
             android:textColor="#000000"
-            android:textSize="12sp" />
+            android:textSize="15sp" />
 
         <CheckBox
             android:id="@+id/cbCheck"
@@ -39,33 +39,15 @@
             android:textColor="#000000"
             android:textSize="12sp" />
 
-        <Button
-            android:id="@+id/btnSpeak"
-            android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:layout_marginStart="8dp"
-            android:background="@drawable/border_black"
-            android:minWidth="0dp"
-            android:paddingHorizontal="8dp"
-            android:text="@string/tts"
-            android:textColor="#000000"
-            android:textSize="12sp" />
     </LinearLayout>
-
-    <!-- 구분선 -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginVertical="8dp"
-        android:background="#000000" />
 
     <!-- 하단: 뜻 + 예문 -->
     <TextView
-        android:id="@+id/tvMean"
+        android:id="@+id/tvPron"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="#000000"
-        android:textSize="15sp" />
+        android:textSize="12sp" />
 
     <TextView
         android:id="@+id/tvExam"
