@@ -12,8 +12,8 @@ android {
         applicationId = "com.soorinote.einkvoca"
         minSdk = 28
         targetSdk = 37
-        versionCode = 6
-        versionName = "1.6"
+        versionCode = 8
+        versionName = "1.8"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
