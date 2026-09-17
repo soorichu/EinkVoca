@@ -136,7 +136,7 @@ class MainActivity : AppCompatActivity() {
     private fun updateFileDirectory() {
         // 경로 텍스트 추출
         val dir: String = getPathDirectory().absolutePath
-        tvGuidePath.setText("* 경로 : ${dir}\n\n위 경로에 'voca.csv'를 UTF-8로 저장하여 넣어주세요.\n헤더: word(단어), mean(의미), pron(발음), exam(예문)")
+        tvGuidePath.setText("* 절대 경로 : ${dir}\n\n실제는 [저장소]/einkvoca/ 폴더에 'voca.csv'를 UTF-8로 저장하여 넣어주세요.")
     }
 
     private fun checkPermissions() {

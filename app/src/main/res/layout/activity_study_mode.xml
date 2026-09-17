@@ -41,7 +41,8 @@
         android:focusable="true"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="16dp"
+        android:layout_marginTop="12dp">
 
         <!-- 단어 & 뜻 중앙 정렬 영역 (남은 공간을 모두 차지해 예문을 아래로 밀어냄) -->
         <LinearLayout
