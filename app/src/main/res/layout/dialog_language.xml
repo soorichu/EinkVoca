@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:background="@android:color/white">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/select_language"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp" />
+
+    <!-- ALL 선택 -->
+    <TextView
+        android:id="@+id/tv_lang_all"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/default_all"
+        android:textSize="16sp"
+        android:paddingVertical="12dp"
+        android:textColor="@android:color/black"
+        android:clickable="true"
+        android:focusable="true" />
+
+    <!-- 한국어(ko) 선택 -->
+    <TextView
+        android:id="@+id/tv_lang_ko"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/ko"
+        android:textSize="16sp"
+        android:paddingVertical="12dp"
+        android:textColor="@android:color/black"
+        android:clickable="true"
+        android:focusable="true" />
+
+    <!-- 영어(en) 선택 -->
+    <TextView
+        android:id="@+id/tv_lang_en"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/en"
+        android:textSize="16sp"
+        android:paddingVertical="12dp"
+        android:textColor="@android:color/black"
+        android:clickable="true"
+        android:focusable="true" />
+
+    <!-- 중국어/일본어(cn/jp) 선택 -->
+    <TextView
+        android:id="@+id/tv_lang_cn_jp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/cn_jp"
+        android:textSize="16sp"
+        android:paddingVertical="12dp"
+        android:textColor="@android:color/black"
+        android:clickable="true"
+        android:focusable="true" />
+
+</LinearLayout>

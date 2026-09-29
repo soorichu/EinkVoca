@@ -3,17 +3,17 @@ plugins {
 }
 
 android {
-    namespace = "com.soorinote.einkvoca"
+    namespace = "cloud.einknote.einkvoca"
     compileSdk {
         version = release(37)
     }
 
     defaultConfig {
-        applicationId = "com.soorinote.einkvoca"
+        applicationId = "cloud.einknote.einkvoca"
         minSdk = 28
         targetSdk = 37
-        versionCode = 8
-        versionName = "1.8"
+        versionCode = 10
+        versionName = "2.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

@@ -1,7 +1,9 @@
 // MainActivity.kt
-package com.soorinote.einkvoca
+package cloud.einknote.einkvoca
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Environment
 import android.widget.Button
@@ -10,11 +12,11 @@ import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStreamReader
-import java.security.KeyStore
 
 class MainActivity : AppCompatActivity() {
 
@@ -136,12 +138,12 @@ class MainActivity : AppCompatActivity() {
     private fun updateFileDirectory() {
         // 경로 텍스트 추출
         val dir: String = getPathDirectory().absolutePath
-        tvGuidePath.setText("* 절대 경로 : ${dir}\n\n실제는 [저장소]/einkvoca/ 폴더에 'voca.csv'를 UTF-8로 저장하여 넣어주세요.")
+        tvGuidePath.setText("* 절대 경로 : ${dir}")
     }
 
     private fun checkPermissions() {
-        if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE, android.Manifest.permission.READ_EXTERNAL_STORAGE), 100)
+        if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE), 100)
         }
     }
 
@@ -299,7 +301,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showDeleteConfirmDialog() {
-        AlertDialog.Builder(this)
+        val dialog = AlertDialog.Builder(this)
             .setTitle("암기한 단어 삭제")
             .setMessage("체크된 암기 완료 단어들을 모두 삭제하시겠습니까?")
             .setPositiveButton("삭제") { _, _ ->
@@ -313,6 +315,18 @@ class MainActivity : AppCompatActivity() {
             }
             .setNegativeButton("취소", null)
             .show()
+
+        // 3. show() 호출 이후에 버튼 객체를 가져와서 색상 변경
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.let { positiveButton ->
+            positiveButton.setTextColor(Color.BLACK)
+            positiveButton.setBackgroundColor(Color.WHITE)
+        }
+
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.let { negativeButton ->
+            negativeButton.setTextColor(Color.BLACK)
+            negativeButton.setBackgroundColor(Color.WHITE)
+        }
     }
+
 
 }

@@ -1,4 +1,4 @@
-package com.soorinote.einkvoca
+package cloud.einknote.einkvoca
 
 import org.junit.Test
 

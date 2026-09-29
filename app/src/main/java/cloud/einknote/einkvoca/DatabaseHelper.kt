@@ -1,5 +1,5 @@
 // DatabaseHelper.kt
-package com.soorinote.einkvoca
+package cloud.einknote.einkvoca
 
 import android.content.ContentValues
 import android.content.Context

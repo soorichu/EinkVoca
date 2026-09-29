@@ -22,10 +22,21 @@
             android:textStyle="bold" />
 
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnLanguage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/border_white"
+            android:focusable="false"
+            android:clickable="true"
+            android:text="@string/default_all" /> <!-- 처음에 보여질 기본값 -->
+
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnHome"
             android:layout_width="wrap_content"
-            android:background="@drawable/border_black"
-            android:layout_height="48dp"
+            android:background="@drawable/border_white"
+            android:layout_height="wrap_content"
             android:textColor="@color/black"
             android:text="@string/home" />
     </LinearLayout>
@@ -72,6 +83,16 @@
                     android:layout_height="1dp"
                     android:layout_marginVertical="16dp"
                     android:background="#000000" />
+                <!-- 발음 영역 -->
+
+                <TextView
+                    android:id="@+id/tvStudyPron"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="#000000"
+                    android:textSize="17sp" />
 
                 <!-- 뜻 영역 -->
                 <TextView
@@ -95,7 +116,7 @@
                 android:gravity="center"
                 android:padding="6dp"
                 android:textColor="#555555"
-                android:textSize="13sp" />
+                android:textSize="15sp" />
         </LinearLayout>
 
         <!-- [오른쪽] 컨트롤 패널 (암기 완료 + 자동 넘김 설정) -->
@@ -136,7 +157,7 @@
                     android:id="@+id/btnMinus"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@drawable/border_black"
+                    android:background="@drawable/border_white"
                     android:textColor="@color/black"
                     android:text="-"
                     android:textSize="20sp" />
@@ -155,7 +176,7 @@
                     android:id="@+id/btnPlus"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@drawable/border_black"
+                    android:background="@drawable/border_white"
                     android:textColor="@color/black"
                     android:text="+"
                     android:textSize="20sp" />

@@ -4,15 +4,15 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.soorinote.einkvoca",
+  "applicationId": "cloud.einknote.einkvoca",
   "variantName": "release",
   "elements": [
     {
       "type": "SINGLE",
       "filters": [],
       "attributes": [],
-      "versionCode": 8,
-      "versionName": "1.8",
+      "versionCode": 10,
+      "versionName": "2.0",
       "outputFile": "app-release.apk"
     }
   ],

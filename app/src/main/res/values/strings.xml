@@ -6,6 +6,11 @@
     <string name="check_box">암기</string>
     <string name="home">홈</string>
     <string name="check">암기</string>
+    <string name="select_language"></string>
+    <string name="default_all">ALL</string>
+    <string name="ko">국어(ko)</string>
+    <string name="en">영어(en/latin)</string>
+    <string name="cn_jp">중국어/일본어/한자</string>
     <string name="flip_select">넘김 설정</string>
     <string name="delete_checked_words">암기한 단어 삭제</string>
     <string name="select_storage">저장소 선택  </string>
@@ -13,5 +18,5 @@
     <string name="external_storage">외부 저장소</string>
     <string name="req_csv_upload_title">[CSV 올리는 방법]</string>
     <string name="guide_path">* 경로 : [저장소]/einkvoca/</string>
-    <string name="req_csv_upload_method"> 폴더에 단어장.csv를 UTF-8로 저장하여 넣어주세요.\nExcel에서 CSV UTF-8(쉼표로 분리)(*.csv)로 저장하면 됩니다.\nCSV 헤더: word, mean, pron, exam (단어, 의미, 발음, 예문)</string>
+    <string name="req_csv_upload_method"> 단어장을 Excel에서 CSV UTF-8(쉼표로 분리)(*.csv)로 저장하면 됩니다.\nCSV 헤더: word, mean, pron, exam (단어, 의미, 발음, 예문)</string>
 </resources>
