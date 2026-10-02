@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#FFFFFF" />
+    <stroke android:width="2dp" android:color="#000000" />
+    <!-- E-ink 가독성을 위해 테두리를 2dp로 뚜렷하게 -->
+</shape>

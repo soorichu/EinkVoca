@@ -35,6 +35,7 @@
         </activity>
         <activity android:name=".VocaListActivity" />
         <activity android:name=".StudyModeActivity" />
+        <activity android:name=".GameActivity" />
     </application>
 
 </manifest>

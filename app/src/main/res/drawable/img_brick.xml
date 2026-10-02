@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="60dp"
+    android:viewportWidth="120"
+    android:viewportHeight="60">
+
+    <!-- 1. 벽돌 기본 바탕 (모서리 파임과 테두리 흠집을 아주 작게 수정) -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M 6,0 L 42,0 L 44,2 L 46,0 L 114,0 L 117,3 L 120,6 L 120,26 L 118,29 L 120,32 L 120,54 L 117,57 L 114,60 L 78,60 L 76,58 L 74,60 L 6,60 L 3,57 L 0,54 L 0,32 L 2,29 L 0,26 L 0,6 L 3,3 Z" />
+
+    <!-- 2. 입체감을 위한 빛 반사 (수정된 외곽선에 맞춰 두께 4dp로 균일하게 조정) -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M 114,0 L 46,0 L 44,2 L 42,0 L 6,0 L 3,3 L 0,6 L 0,26 L 2,29 L 0,32 L 0,54 L 4,50 L 4,33 L 6,29 L 4,25 L 4,10 L 6,8 L 10,4 L 41,4 L 44,6 L 47,4 L 110,4 Z" />
+
+    <!-- 3. 입체감을 위한 그림자 (수정된 외곽선에 맞춰 조정) -->
+    <path
+        android:fillColor="#EEEEEE"
+        android:pathData="M 114,0 L 117,3 L 120,6 L 120,26 L 118,29 L 120,32 L 120,54 L 117,57 L 114,60 L 78,60 L 76,58 L 74,60 L 6,60 L 3,57 L 0,54 L 4,50 L 6,53 L 10,56 L 73,56 L 76,54 L 79,56 L 110,56 L 113,53 L 116,50 L 116,33 L 114,29 L 116,25 L 116,10 L 113,7 L 110,4 Z" />
+
+    <!-- 4. 벽돌 표면의 크랙 (금이 간 범위도 조금 더 작고 앙증맞게 축소) -->
+    <path
+        android:strokeColor="#EEEEEE"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M 10,10 L 18,15 L 15,20 M 110,12 L 105,18 L 108,22 M 12,50 L 20,45 L 22,50 M 105,48 L 98,42 L 102,36 M 50,12 Q 55,18 52,25 M 75,48 L 72,42 L 78,36" />
+
+    <!-- 5. 벽돌 전체 테두리 (검정) -->
+    <path
+        android:strokeColor="#111111"
+        android:strokeWidth="2"
+        android:strokeLineJoin="round"
+        android:pathData="M 6,0 L 42,0 L 44,2 L 46,0 L 114,0 L 117,3 L 120,6 L 120,26 L 118,29 L 120,32 L 120,54 L 117,57 L 114,60 L 78,60 L 76,58 L 74,60 L 6,60 L 3,57 L 0,54 L 0,32 L 2,29 L 0,26 L 0,6 L 3,3 Z" />
+
+</vector>

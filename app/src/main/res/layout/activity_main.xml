@@ -39,6 +39,18 @@
         android:textStyle="bold" />
 
     <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnGameMode"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/border_black"
+        android:text="@string/game_mode"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnDeleteChecked"
         android:layout_width="match_parent"
         android:layout_height="50dp"

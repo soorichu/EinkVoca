@@ -53,6 +53,7 @@ class MainActivity : AppCompatActivity() {
         val btnSync = findViewById<Button>(R.id.btnSync)
         val btnOpenVoca = findViewById<Button>(R.id.btnOpenVoca)
         val btnStudyMode = findViewById<Button>(R.id.btnStudyMode)
+        var btnGameMode = findViewById<Button>(R.id.btnGameMode)
         val btnDeleteChecked = findViewById<Button>(R.id.btnDeleteChecked)
 
         // 권한 확인 및 요청
@@ -74,6 +75,10 @@ class MainActivity : AppCompatActivity() {
 
         btnStudyMode.setOnClickListener {
             startActivity(Intent(this, StudyModeActivity::class.java))
+        }
+
+        btnGameMode.setOnClickListener {
+            startActivity(Intent(this, GameActivity::class.java))
         }
 
         btnDeleteChecked.setOnClickListener {
